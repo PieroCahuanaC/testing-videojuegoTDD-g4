@@ -37,7 +37,7 @@ def test_no_se_puede_revelar_carta_emparejada():
     card.reveal()
     assert card.revealed is False  
 
-# ✅ T06 (corregido)
+# T06 
 def test_no_se_puede_ocultar_carta_emparejada():
     card = Card("grape", "image")
     card.reveal()

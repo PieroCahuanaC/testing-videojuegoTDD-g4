@@ -1,28 +1,34 @@
 import random
-import os
-import pygame
 from src.card import Card
 
-# Configuración del tablero
-CARD_SIZE = (100, 140)
-GAP = 20
-ROWS, COLS = 3, 4
-CARD_NAMES = ["apple", "banana", "cherry", "grape", "lemon", "orange"]
-ASSETS_DIR = "assets/cards"
+class Board:
+    def __init__(self, card_ids):
+        # Creamos pares a partir de los IDs proporcionados
+        self.cards = [Card(name, "img") for name in card_ids * 2]
+        random.shuffle(self.cards)
+        self.selected_cards = []
 
-def create_board():
-    card_names = CARD_NAMES * 2  # crear pares
-    random.shuffle(card_names)
-    board = []
+    def select_card(self, index):
+        card = self.cards[index]
+        if not card.revealed and not card.matched:
+            card.reveal()
+            self.selected_cards.append(card)
 
-    total_width = COLS * CARD_SIZE[0] + (COLS - 1) * GAP
-    total_height = ROWS * CARD_SIZE[1] + (ROWS - 1) * GAP
-    offset_x = (800 - total_width) // 2
-    offset_y = 100
+    def check_match(self):
+        if len(self.selected_cards) != 2:
+            return False
 
-    for row in range(ROWS):
-        for col in range(COLS):
-            x = offset_x + col * (CARD_SIZE[0] + GAP)
-            y = offset_y + row * (CARD_SIZE[1] + GAP)
-            board.append(Card(card_names.pop(), (x, y)))
-    return board
+        c1, c2 = self.selected_cards
+        if c1.is_match(c2):
+            c1.match()
+            c2.match()
+            self.selected_cards.clear()
+            return True
+        else:
+            c1.hide()
+            c2.hide()
+            self.selected_cards.clear()
+            return False
+
+    def all_matched(self):
+        return all(card.matched for card in self.cards)

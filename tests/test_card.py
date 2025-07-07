@@ -238,25 +238,25 @@ def test_se_muestra_animacion_confeti_al_ganar():
     game.play_turn(1)
     assert game.confetti_activo is True
 
-# T27: El temporizador decrementa con el tiempo
+# T27: El temporizador incrementa al iniciar el juego
 def test_temporizador_inicia_con_juego():
     game = Game(["uva"])
-    tiempo_inicial = game.tiempo_restante
+    tiempo_inicial = game.tiempo_inicial
     game.tick()
-    assert game.tiempo_restante < tiempo_inicial
+    assert game.tiempo_inicial > tiempo_inicial
+
 
 # T28: El temporizador se detiene si el juego está pausado
 def test_temporizador_se_detiene_en_pausa():
     game = Game(["uva"])
     game.toggle_pause()
-    tiempo_paused = game.tiempo_restante
+    tiempo_paused = game.tiempo_inicial
     game.tick()
-    assert game.tiempo_restante == tiempo_paused
+    assert game.tiempo_inicial == tiempo_paused
 
-# T29: Al llegar a 0, el juego debe terminar
-def test_temporizador_llega_a_cero_termina_juego():
+# T29: El tiempo transcurre mientras el juego está en curso
+def test_temporizador_aumenta_con_juego_activo():
     game = Game(["uva"])
-    game.tiempo_restante = 1
+    tiempo_inicial = game.tiempo_inicial
     game.tick()
-    assert game.tiempo_restante == 0
-    assert game.game_over() is True
+    assert game.tiempo_inicial == tiempo_inicial + 1

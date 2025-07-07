@@ -1,5 +1,7 @@
+# src/board.py
+
 import random
-from src.card import Card
+from .card import Card
 
 class Board:
     def __init__(self, card_ids):
